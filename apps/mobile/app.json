@@ -44,7 +44,7 @@
         {
           "android": {
             "manifestPlaceholders": {
-              "appAuthRedirectScheme": "ssodemo"
+              "appAuthRedirectScheme": "msauth.com.ssodemo.app"
             }
           }
         }
