@@ -26,6 +26,14 @@ yarn dev
 yarn ios
 ```
 
+## Open terminal in path apps/mobile/
+
+let run this command to install expose tool
+
+```bash
+yarn install-expo-router
+```
+
 ## Azure
 
 Redirect URI for the client must be:
