@@ -1,5 +1,5 @@
 const appJson = require("./app.json");
-const envConfig = require("./env.json");
+const envConfig = require("../../../env.json");
 
 module.exports = ({ config }) => {
   const base = appJson.expo ?? config ?? {};
