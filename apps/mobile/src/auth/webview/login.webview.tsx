@@ -35,8 +35,11 @@ export function LoginWebView({ onToken, onError }: Props) {
   return (
     <WebView
       source={{ uri: LOGIN_URL }}
+      // Enable JavaScript for proper redirect handling
+      javaScriptEnabled={true}
       // Intercept redirect to capture id_token from the web app flow.
       onShouldStartLoadWithRequest={(request) => {
+        console.log('WebView loading:', request.url);
         if (request.url.startsWith(REDIRECT_URI)) {
           const token = extractIdToken(request.url);
           if (token) {

@@ -5,6 +5,7 @@
   "scripts": {
     "install-expo-router": "npx expo install expo-router",
     "start": "expo start --dev-client --scheme ssodemo",
+    "local-api-port-forward": "adb reverse tcp:3002 tcp:3002",
     "start:go": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",

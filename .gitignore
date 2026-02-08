@@ -39,7 +39,3 @@ apps/mobile/.env
 *.tsbuildinfo
 
 app-example
-
-# generated native folders
-/apps/mobile/ios
-/apps/mobile/android
