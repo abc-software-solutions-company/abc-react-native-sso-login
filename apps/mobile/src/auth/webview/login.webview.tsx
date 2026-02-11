@@ -1,20 +1,29 @@
-import React from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import { WebView } from 'react-native-webview';
+import React from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { WebView } from "react-native-webview";
 
-const LOGIN_URL = process.env.EXPO_PUBLIC_WEB_LOGIN_URL || '';
-const REDIRECT_URI = process.env.EXPO_PUBLIC_MS_REDIRECT_URI || 'ssodemo://auth';
+const LOGIN_URL = process.env.EXPO_PUBLIC_WEB_LOGIN_URL || "";
+const REDIRECT_URI =
+  process.env.EXPO_PUBLIC_MS_REDIRECT_URI || "ssodemo://auth";
 
 type Props = {
-  onToken: (idToken: string) => void;
+  onToken: (tokens: {
+    idToken: string;
+    accessToken: string;
+    refreshToken: string;
+  }) => void;
   onError: (message: string) => void;
 };
 
-function extractIdToken(url: string): string | null {
-  const [base, hash] = url.split('#');
-  const query = base.split('?')[1] || '';
+function extractTokens(url: string) {
+  const [base, hash] = url.split("#");
+  const query = base.split("?")[1] || "";
   const params = new URLSearchParams(hash || query);
-  return params.get('id_token');
+  return {
+    idToken: params.get("id_token"),
+    accessToken: params.get("accessToken"),
+    refreshToken: params.get("refreshToken"),
+  };
 }
 
 export function LoginWebView({ onToken, onError }: Props) {
@@ -24,9 +33,7 @@ export function LoginWebView({ onToken, onError }: Props) {
         <ActivityIndicator />
         <View style={styles.spacer} />
         <View>
-          <Text style={styles.helper}>
-            Missing EXPO_PUBLIC_WEB_LOGIN_URL
-          </Text>
+          <Text style={styles.helper}>Missing EXPO_PUBLIC_WEB_LOGIN_URL</Text>
         </View>
       </View>
     );
@@ -39,13 +46,17 @@ export function LoginWebView({ onToken, onError }: Props) {
       javaScriptEnabled={true}
       // Intercept redirect to capture id_token from the web app flow.
       onShouldStartLoadWithRequest={(request) => {
-        console.log('WebView loading:', request.url);
+        console.log("WebView loading:", request.url);
         if (request.url.startsWith(REDIRECT_URI)) {
-          const token = extractIdToken(request.url);
-          if (token) {
-            onToken(token);
+          const tokens = extractTokens(request.url);
+          if (tokens.idToken && tokens.accessToken && tokens.refreshToken) {
+            onToken({
+              idToken: tokens.idToken,
+              accessToken: tokens.accessToken,
+              refreshToken: tokens.refreshToken,
+            });
           } else {
-            onError('Missing id_token in redirect.');
+            onError("Missing id_token/access_token/refresh_token in redirect.");
           }
           return false;
         }
@@ -64,14 +75,14 @@ export function LoginWebView({ onToken, onError }: Props) {
 const styles = StyleSheet.create({
   center: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   spacer: {
     height: 12,
   },
   helper: {
-    color: '#64748b',
+    color: "#64748b",
     fontSize: 12,
   },
 });

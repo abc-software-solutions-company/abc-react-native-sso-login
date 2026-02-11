@@ -27,9 +27,16 @@ export default function App() {
     await SessionManager.saveSession(newSession);
     setSession(newSession);
     setScreen('profile');
+    console.log('[auth] login success', {
+      userId: newSession.user.id,
+      email: newSession.user.email,
+      name: newSession.user.name,
+      role: newSession.user.role,
+    });
   };
 
   const onLogout = async () => {
+    console.log('[auth] logout');
     await SessionManager.clearSession();
     setSession(null);
     setScreen('choice');

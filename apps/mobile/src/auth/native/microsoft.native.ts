@@ -25,7 +25,13 @@ function readEnv() {
   return { tenantId, clientId, redirectUrl };
 }
 
-export async function loginWithMicrosoftNative(): Promise<string> {
+export type MicrosoftNativeTokens = {
+  idToken: string;
+  accessToken: string;
+  refreshToken: string;
+};
+
+export async function loginWithMicrosoftNative(): Promise<MicrosoftNativeTokens> {
   const { tenantId, clientId, redirectUrl } = readEnv();
   if (!tenantId || !clientId || !redirectUrl) {
     throw new Error("Missing Microsoft auth env config.");
@@ -49,7 +55,16 @@ export async function loginWithMicrosoftNative(): Promise<string> {
   if (!result.idToken) {
     throw new Error("Missing id_token from Microsoft");
   }
+  if (!result.accessToken) {
+    throw new Error("Missing accessToken from Microsoft");
+  }
+  if (!result.refreshToken) {
+    throw new Error("Missing refreshToken from Microsoft");
+  }
 
-  // Return only the id_token; backend will verify and issue internal tokens.
-  return result.idToken;
+  return {
+    idToken: result.idToken,
+    accessToken: result.accessToken,
+    refreshToken: result.refreshToken,
+  };
 }

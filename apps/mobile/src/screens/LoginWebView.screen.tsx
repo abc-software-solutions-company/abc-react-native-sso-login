@@ -12,12 +12,13 @@ type Props = {
 export function LoginWebViewScreen({ onBack, onSuccess }: Props) {
   const [loading, setLoading] = useState(false);
 
-  const handleToken = async (idToken: string) => {
+  const handleToken = async (tokens: { idToken: string; accessToken: string; refreshToken: string }) => {
     try {
       setLoading(true);
-      const session = await exchangeIdToken(idToken);
+      const session = await exchangeIdToken(tokens);
       onSuccess(session);
     } catch (error: any) {
+      console.warn('[auth] login failed (webview)', error?.message || error);
       Alert.alert('Login failed', error.message || 'Please try again.');
     } finally {
       setLoading(false);
@@ -25,6 +26,7 @@ export function LoginWebViewScreen({ onBack, onSuccess }: Props) {
   };
 
   const handleError = (message: string) => {
+    console.warn('[auth] login failed (webview)', message);
     Alert.alert('Login failed', message);
   };
 

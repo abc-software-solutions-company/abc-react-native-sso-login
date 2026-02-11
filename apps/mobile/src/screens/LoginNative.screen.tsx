@@ -15,10 +15,11 @@ export function LoginNativeScreen({ onBack, onSuccess }: Props) {
   const handleLogin = async () => {
     try {
       setLoading(true);
-      const idToken = await loginWithMicrosoftNative();
-      const session = await exchangeIdToken(idToken);
+      const tokens = await loginWithMicrosoftNative();
+      const session = await exchangeIdToken(tokens);
       onSuccess(session);
     } catch (error: any) {
+      console.warn('[auth] login failed (native)', error?.message || error);
       Alert.alert('Login failed', error.message || 'Please try again.');
     } finally {
       setLoading(false);

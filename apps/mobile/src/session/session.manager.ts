@@ -1,5 +1,5 @@
-import { TokenStorage } from './token.storage';
-import type { Session, User } from '../types/auth';
+import type { Session, User } from "../types/auth";
+import { TokenStorage } from "./token.storage";
 
 export const SessionManager = {
   async saveSession(session: Session) {
@@ -15,11 +15,7 @@ export const SessionManager = {
     if (!stored) return null;
 
     const user = JSON.parse(stored.userJson) as User;
-    return {
-      accessToken: stored.accessToken,
-      refreshToken: stored.refreshToken,
-      user,
-    };
+    return { accessToken: stored.accessToken, refreshToken: stored.refreshToken, user };
   },
 
   async clearSession() {
